@@ -1,10 +1,14 @@
-import { IsEmail, IsOptional, NotEquals, ValidateIf } from 'class-validator';
+import { IsEmail, IsOptional, IsString } from 'class-validator';
+import { NullToUndefined } from 'src/common/decorators/null-to-undefined.decorator';
 
 export class UpdateUserDTO {
 	@IsOptional()
+	@NullToUndefined()
+	@IsString()
 	name?: string;
 
-	@IsEmail({}, { message: 'Email must be valid' })
 	@IsOptional()
+	@NullToUndefined()
+	@IsEmail({}, { message: 'Email must be valid' })
 	email?: string;
 }
