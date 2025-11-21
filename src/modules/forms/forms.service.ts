@@ -5,12 +5,14 @@ import { Repository } from 'typeorm';
 import { CreateFormDTO } from './dto/create-form.dto';
 import { UpdateFormDTO } from './dto/update-form.dto';
 import { FormStatus } from './enums/form-status';
+import { UsersService } from '../users/users.service';
 
 @Injectable()
 export class FormsService {
 	constructor(
 		@InjectRepository(Form)
 		private readonly formRepository: Repository<Form>,
+		private readonly usersService: UsersService,
 	) {}
 
 	findAll() {
@@ -27,7 +29,9 @@ export class FormsService {
 		return this.formRepository.findBy({ ownerId });
 	}
 
-	create(createFormDto: CreateFormDTO) {
+	async create(createFormDto: CreateFormDTO) {
+		const owner = await this.usersService.findById(createFormDto.ownerId);
+		if (!owner) throw new ConflictException('The specified owner does not exist');
 		const form = this.formRepository.create(createFormDto);
 		return this.formRepository.save(form);
 	}

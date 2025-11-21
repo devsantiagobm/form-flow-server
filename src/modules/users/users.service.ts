@@ -17,7 +17,19 @@ export class UsersService {
 		return this.usersRepository.find();
 	}
 
+	/**
+	 * Finds a user by id without throwing an error.
+	 * Returns the user or null. Used in flows where a missing user is valid (e.g. for a wrong search).
+	 */
 	async findById(id: string) {
+		return await this.usersRepository.findOneBy({ id });
+	}
+
+	/**
+	 * Retrieves a user by id and throws if not found.
+	 * Used when the user must exist (e.g. profile access).
+	 */
+	async getById(id: string) {
 		const user = await this.usersRepository.findOneBy({ id });
 		if (!user) throw new NotFoundException(`user not found`);
 		return user;
