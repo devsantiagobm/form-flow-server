@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { FormsModule } from './modules/forms/forms.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
+import { FieldsModule } from './modules/fields/fields.module';
 
 @Module({
 	imports: [
@@ -21,6 +22,7 @@ import { ConfigModule } from '@nestjs/config';
 		UsersModule,
 		FormsModule,
 		AuthModule,
+		FieldsModule,
 	],
 	controllers: [],
 	providers: [],
