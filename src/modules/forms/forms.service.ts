@@ -71,7 +71,6 @@ export class FormsService {
 	}
 
 	async duplicate(id: string) {
-		// TODO CUANDO ESTO CREZCA HAY QUE DUPLICAR LAS PREGUNTAS TAMBIEN
 		const form = await this.formRepository.findOneBy({ id });
 		if (!form) throw new NotFoundException('Form not found');
 

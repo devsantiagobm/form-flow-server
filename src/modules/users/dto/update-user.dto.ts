@@ -5,7 +5,7 @@ export class UpdateUserDTO {
 	@IsOptional()
 	@NullToUndefined()
 	@IsString()
-	name?: string;
+	username?: string;
 
 	@IsOptional()
 	@NullToUndefined()

@@ -37,11 +37,11 @@ export class Form {
 	@Column({ nullable: true, type: 'date' })
 	endDate?: Date;
 
-	@CreateDateColumn()
-	createdAt: Date;
-
 	@Column({ default: false })
 	enableNotifications: boolean;
+
+	@CreateDateColumn()
+	createdAt: Date;
 
 	@UpdateDateColumn()
 	updatedAt: Date;

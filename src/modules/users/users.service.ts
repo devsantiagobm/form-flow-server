@@ -1,7 +1,7 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDTO } from './dto/create-user.dto';
 import { UpdateUserDTO } from './dto/update-user.dto';
-import { Repository } from 'typeorm';
+import { FindOneOptions, Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UpdatePasswordDTO } from './dto/update-password.dto';
@@ -23,7 +23,10 @@ export class UsersService {
 		return user;
 	}
 
-	create(createUserDto: CreateUserDTO) {
+	async create(createUserDto: CreateUserDTO) {
+		const existsByEmail = await this.usersRepository.findOneBy({ email: createUserDto.email });
+		if (existsByEmail) throw new ConflictException('Email already registered');
+
 		const user = this.usersRepository.create(createUserDto);
 		return this.usersRepository.save(user);
 	}
@@ -52,5 +55,24 @@ export class UsersService {
 		if (!user) throw new NotFoundException('User not found');
 
 		return this.usersRepository.remove(user);
+	}
+
+	/**
+	 * Finds a user by email without throwing an error.
+	 * Returns the user or null. Used in flows where a missing user is valid (e.g. login).
+	 */
+	async findByEmail(email: string, options?: Omit<FindOneOptions<User>, 'where'>) {
+		return this.usersRepository.findOne({ ...options, where: { email } });
+	}
+
+	/**
+	 * Retrieves a user by email and throws if not found.
+	 * Used when the user must exist (e.g. profile access).
+	 */
+	async getByEmail(email: string) {
+		const user = await this.usersRepository.findOne({ where: { email } });
+		if (!user) throw new NotFoundException('User with this email was not found');
+
+		return user;
 	}
 }

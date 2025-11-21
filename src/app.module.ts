@@ -2,9 +2,12 @@ import { Module } from '@nestjs/common';
 import { UsersModule } from './modules/users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { FormsModule } from './modules/forms/forms.module';
+import { AuthModule } from './modules/auth/auth.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
 	imports: [
+		ConfigModule.forRoot({ isGlobal: true }),
 		TypeOrmModule.forRoot({
 			type: 'mysql',
 			host: 'localhost',
@@ -17,6 +20,7 @@ import { FormsModule } from './modules/forms/forms.module';
 		}),
 		UsersModule,
 		FormsModule,
+		AuthModule,
 	],
 	controllers: [],
 	providers: [],
